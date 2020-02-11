@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backgroundjob-deployment
+  labels:
+    app: BackgroundJob
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            "beta.kubernetes.io/os": windows
+          containers:
+            - name: mmlsacrdev
+              image:  mmlsacrdev.azurecr.io/cosmodbbackgroundjob/v1
+              env:
+              - name: CronJobOutputFolder
+                value: "/var/cron-logs"
+          restartPolicy: OnFailure
